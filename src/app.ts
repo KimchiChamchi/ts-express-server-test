@@ -28,7 +28,7 @@ export const createApp = (): express.Application => {
   app.use(timeout(CONFIG.SERVER.TIMEOUT));
 
   // API Routes
-  app.use(`/api/${CONFIG.APP.VER}`, routes);
+  app.use(`/`, routes);
 
   // Error Middleware
   app.use(errorHandler.genericErrorHandler);

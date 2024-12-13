@@ -12,7 +12,7 @@ beforeAll(async () => {
 describe("[UNIT] => HOME", () => {
   describe("GET: '/'", () => {
     it("Should return API app information", async () => {
-      const response = await agent.get(`/api/${CONFIG.APP.VER}`);
+      const response = await agent.get(`/`);
       expect(response.status).toBe(OK);
       expect(Object.keys(response.body.data)).toEqual([
         "NAME",
@@ -20,6 +20,7 @@ describe("[UNIT] => HOME", () => {
         "VER",
         "DESCRIPTION",
         "AUTHORS",
+        "HOST",
         "PORT",
         "ENV",
       ]);
@@ -42,11 +43,9 @@ describe("[UNIT] => HOME", () => {
       }: {
         query: string;
         field: keyof typeof CONFIG.APP;
-        expectedStatus: string;
+        expectedStatus: number;
       }) => {
-        const response = await agent
-          .get(`/api/${CONFIG.APP.VER}`)
-          .query({ key: query });
+        const response = await agent.get(`/`).query({ key: query });
 
         expect(response.body.status).toBe(expectedStatus);
         expect(response.body.data[field]).toBe(CONFIG.APP[field]);
@@ -55,9 +54,7 @@ describe("[UNIT] => HOME", () => {
 
     it("Should return 400 status Validation Error", async () => {
       const invalidQuery = "invalid-field";
-      const response = await agent
-        .get(`/api/${CONFIG.APP.VER}`)
-        .query({ key: invalidQuery });
+      const response = await agent.get(`/`).query({ key: invalidQuery });
 
       expect(response.body.status).toBe(BAD_REQUEST);
       expect(response.body.message).toBe(HttpStatus[BAD_REQUEST]);
